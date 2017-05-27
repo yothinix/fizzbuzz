@@ -1,6 +1,10 @@
 import click
+from pygments import highlight
+from pygments.lexers import get_lexer_by_name
+from pygments.formatters import Terminal256Formatter
 
 FOREGROUND = 'white'
+LEXER = get_lexer_by_name('py3tb')
 
 
 def display_status(status):
@@ -45,7 +49,7 @@ def print_failures(failures):
         desc = fail[0].__str__().split(' ')
         name, suite = desc[0], desc[1]
         print_testcase(display_status('FAIL'), display_test_name(name, 'FAIL'), suite)
-        click.echo(click.style(fail[1], fg='red'))
+        click.echo(click.style(highlight(fail[1], LEXER, Terminal256Formatter()), dim=True))
 
 
 def print_errors(errors):
@@ -53,5 +57,5 @@ def print_errors(errors):
         desc = err[0].__str__().split(' ')
         name, suite = desc[0], desc[1]
         print_testcase(display_status('ERROR'), display_test_name(name, 'ERROR'), suite)
-        click.echo(click.style(err[1], fg='yellow'))
+        click.echo(click.style(highlight(err[1], LEXER, Terminal256Formatter()), dim=True))
 
