@@ -5,7 +5,8 @@ from pprint import pprint
 
 import click
 
-from display import display_status, print_testcase, print_summary
+from display import display_status, print_testcase, print_summary, print_errors, print_failures
+from utils import is_pass
 
 
 start_time = datetime.datetime.now()
@@ -18,8 +19,6 @@ result = runner.run(tests)
 
 end_time = datetime.datetime.now()
 
-# print('Errors {}'.format(result.errors))
-# pprint(result.failures)
 stream.seek(0)
 test_result = stream.read()
 text_line = test_result.split('\n')
@@ -28,15 +27,18 @@ pass_count = 0
 for line in text_line:
     if count < result.testsRun:
         test_instance = line.split(' ')
-        if test_instance[3] == 'ok':
+        if is_pass(test_instance[3]):
             pass_count += 1
 
         print_testcase(
             status=display_status(test_instance[3]),
             name=test_instance[0],
             suite=test_instance[1]
-        )
+        ) if is_pass(test_instance[3]) else None
     count += 1
+
+print_failures(failures=result.failures)
+print_errors(errors=result.errors)
 
 print_summary(
     pass_number=pass_count,

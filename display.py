@@ -28,3 +28,19 @@ def print_summary(pass_number, total_test, execution_time):
     click.echo(title_1 + '\t\t' + test_suite_pass + ', {}'.format(total_test) + ' total')
     click.echo(title_2 + '\t\t' + '{}s'.format(execution_time))
 
+
+def print_failures(failures):
+    for fail in failures:
+        desc = fail[0].__str__().split(' ')
+        name, suite = desc[0], desc[1]
+        print_testcase(display_status('FAIL'), name, suite)
+        click.echo(click.style(fail[1], fg='red'))
+
+
+def print_errors(errors):
+    for err in errors:
+        desc = err[0].__str__().split(' ')
+        name, suite = desc[0], desc[1]
+        print_testcase(display_status('ERROR'), name, suite)
+        click.echo(click.style(err[1], fg='yellow'))
+
