@@ -14,18 +14,29 @@ def display_status(status):
         return click.style(' RUNS ', bg='yellow', fg=FOREGROUND, bold=True)
 
 
+def display_test_name(name, status='ok'):
+    if status == 'FAIL':
+        return click.style(name, fg='red')
+    elif status == 'ERROR':
+        return click.style(name, fg='yellow')
+    else:
+        return click.style(name, fg='white')
+
+
 def print_testcase(status, name, suite):
     display_suite = click.style(suite, fg='white', dim=True)
     click.echo(status + ' ' + name + ' ' + display_suite)
 
 
-def print_summary(pass_number, total_test, execution_time):
+def print_summary(pass_number, fail_number, err_number, total_test, execution_time):
     click.echo(' ')
-    pass_text = '{} passed'.format(pass_number)
-    test_suite_pass = click.style(pass_text, fg='green', bold=True)
+    test_pass = click.style('{} passed, '.format(pass_number), fg='green', bold=True)
+    test_fail = click.style('{} failed, '.format(fail_number), fg='red', bold=True)
+    test_err = click.style('{} error, '.format(err_number), fg='yellow', bold=True)
+    run_stat = test_pass + test_fail + test_err
     title_1 = click.style('Tests: ', bold=True)
     title_2 = click.style('Time: ', bold=True)
-    click.echo(title_1 + '\t\t' + test_suite_pass + ', {}'.format(total_test) + ' total')
+    click.echo(title_1 + '\t\t' + run_stat + ' {}'.format(total_test) + ' total')
     click.echo(title_2 + '\t\t' + '{}s'.format(execution_time))
 
 
@@ -33,7 +44,7 @@ def print_failures(failures):
     for fail in failures:
         desc = fail[0].__str__().split(' ')
         name, suite = desc[0], desc[1]
-        print_testcase(display_status('FAIL'), name, suite)
+        print_testcase(display_status('FAIL'), display_test_name(name, 'FAIL'), suite)
         click.echo(click.style(fail[1], fg='red'))
 
 
@@ -41,6 +52,6 @@ def print_errors(errors):
     for err in errors:
         desc = err[0].__str__().split(' ')
         name, suite = desc[0], desc[1]
-        print_testcase(display_status('ERROR'), name, suite)
+        print_testcase(display_status('ERROR'), display_test_name(name, 'ERROR'), suite)
         click.echo(click.style(err[1], fg='yellow'))
 

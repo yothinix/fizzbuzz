@@ -42,6 +42,8 @@ print_errors(errors=result.errors)
 
 print_summary(
     pass_number=pass_count,
+    fail_number=len(result.failures),
+    err_number=len(result.failures),
     total_test=result.testsRun,
     execution_time=(end_time - start_time).total_seconds()
 )
