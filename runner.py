@@ -5,13 +5,14 @@ from pprint import pprint
 
 import click
 
-from test_fizzbuzz import TestFizzBuzz
 
 start_time = datetime.datetime.now()
 
 stream = StringIO()
 runner = unittest.TextTestRunner(stream=stream, verbosity=2)
-result = runner.run(unittest.makeSuite(TestFizzBuzz))
+loader = unittest.TestLoader()
+tests = loader.discover('.')
+result = runner.run(tests)
 
 end_time = datetime.datetime.now()
 
