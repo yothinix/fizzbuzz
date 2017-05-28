@@ -13,7 +13,9 @@ def display_status(status):
     elif status == 'FAIL':
         return click.style(' FAIL ', bg='red', fg=FOREGROUND, bold=True)
     elif status == 'ERROR':
-        return click.style(' ERR  ', bg='yellow', fg=FOREGROUND, bold=True)
+        return click.style(' ERR  ', bg='red', fg=FOREGROUND, bold=True)
+    elif status == 'SKIP':
+        return click.style(' SKIP ', bg='blue', fg=FOREGROUND, bold=True)
     else:
         return click.style(' RUNS ', bg='yellow', fg=FOREGROUND, bold=True)
 
@@ -27,9 +29,20 @@ def display_test_name(name, status='ok'):
         return click.style(name, fg='white')
 
 
-def print_testcase(status, name, suite):
-    display_suite = click.style(suite, fg='white', dim=True)
-    click.echo(status + ' ' + name + ' ' + display_suite)
+def display_test_suit(suit):
+    return click.style(suit, fg='white', dim=True)
+
+
+def print_test_description(description):
+    desc = description.split(' ')
+    return '{name} {suit}'.format(
+        name=display_test_name(desc[0]),
+        suit=display_test_suit(desc[1])
+    )
+
+
+def display_skip(reason):
+    return click.style("'{0}'".format(reason), fg='blue')
 
 
 def print_summary(pass_number, fail_number, err_number, total_test, execution_time):

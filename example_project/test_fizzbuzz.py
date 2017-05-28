@@ -36,10 +36,17 @@ class TestFizzBuzz(unittest.TestCase):
         self.assertEqual(actual , expect)
 
     def test_input_string_should_throw_error(self):
+        time.sleep(1)
         fizzbuzz('1')
 
     def test_failed_test(self):
         expect = 'fizz'
         actual = fizzbuzz(1)
+        time.sleep(1)
         self.assertEqual(actual, expect)
 
+    @unittest.skip("demonstrating skipping")
+    def test_skipped_naja(self):
+        expect = 'something'
+        time.sleep(1)
+        self.assertEqual(expect, expect)

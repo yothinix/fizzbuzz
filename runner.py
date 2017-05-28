@@ -7,6 +7,8 @@ import warnings
 import result
 from unittest.signals import registerResult
 
+from display import display_status, print_test_description, display_skip
+
 __unittest = True
 
 
@@ -51,14 +53,16 @@ class TextTestResult(result.TestResult):
     def startTest(self, test):
         super(TextTestResult, self).startTest(test)
         if self.showAll:
-            self.stream.write(self.getDescription(test))
-            self.stream.write(" ... ")
+            self.stream.write("{0} ".format(display_status('run')))
+            self.stream.write(print_test_description(self.getDescription(test)))
             self.stream.flush()
 
     def addSuccess(self, test):
         super(TextTestResult, self).addSuccess(test)
         if self.showAll:
-            self.stream.writeln("ok")
+            self.stream.write("\r{0} ".format(display_status('ok')))
+            self.stream.write(print_test_description(self.getDescription(test)))
+            self.stream.write("\n")
         elif self.dots:
             self.stream.write('.')
             self.stream.flush()
@@ -66,7 +70,9 @@ class TextTestResult(result.TestResult):
     def addError(self, test, err):
         super(TextTestResult, self).addError(test, err)
         if self.showAll:
-            self.stream.writeln("ERROR")
+            self.stream.write("\r{0} ".format(display_status('ERROR')))
+            self.stream.write(print_test_description(self.getDescription(test)))
+            self.stream.write("\n")
         elif self.dots:
             self.stream.write('E')
             self.stream.flush()
@@ -74,7 +80,9 @@ class TextTestResult(result.TestResult):
     def addFailure(self, test, err):
         super(TextTestResult, self).addFailure(test, err)
         if self.showAll:
-            self.stream.writeln("FAIL")
+            self.stream.write("\r{0} ".format(display_status('FAIL')))
+            self.stream.write(print_test_description(self.getDescription(test)))
+            self.stream.write("\n")
         elif self.dots:
             self.stream.write('F')
             self.stream.flush()
@@ -82,7 +90,10 @@ class TextTestResult(result.TestResult):
     def addSkip(self, test, reason):
         super(TextTestResult, self).addSkip(test, reason)
         if self.showAll:
-            self.stream.writeln("skipped {0!r}".format(reason))
+            self.stream.write("\r{0} ".format(display_status('SKIP')))
+            self.stream.write(print_test_description(self.getDescription(test)))
+            self.stream.write(" {} ".format(display_skip(reason)))
+            self.stream.write("\n")
         elif self.dots:
             self.stream.write("s")
             self.stream.flush()

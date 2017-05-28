@@ -5,7 +5,7 @@ from pprint import pprint
 
 import click
 
-from display import (display_status, print_testcase, print_summary,
+from display import (display_status, print_summary,
                      print_errors, print_failures)
 from runner import TextTestRunner
 from utils import is_pass
